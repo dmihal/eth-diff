@@ -5,11 +5,28 @@ import { ReactGhLikeDiff } from "react-gh-like-diff";
 import { getContract, Contract } from '../../lib/etherscan';
 
 interface DiffPageProps {
-  contractA: Contract;
-  contractB: Contract;
+  contractA: Contract | null;
+  contractB: Contract | null;
+  addressA: string;
+  addressB: string;
 }
 
-const DiffPage: NextPage<DiffPageProps> = ({ contractA, contractB }) => {
+const DiffPage: NextPage<DiffPageProps> = ({ contractA, contractB, addressA, addressB }) => {
+  if (!contractA) {
+    return (
+      <Layout title="Not found">
+        No contract source code found at {addressA}
+      </Layout>
+    );
+  }
+  if (!contractB) {
+    return (
+      <Layout title="Not found">
+        No contract source code found at {addressB}
+      </Layout>
+    );
+  }
+
   return (
     <Layout title="ETHDiff">
       <ReactGhLikeDiff
@@ -26,8 +43,6 @@ const DiffPage: NextPage<DiffPageProps> = ({ contractA, contractB }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ params, res }) => {
-  console.log(params.addressA);
-
   const [contractA, contractB] = await Promise.all([
     getContract(params.addressA),
     getContract(params.addressB),
@@ -38,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
     res.setHeader('Cache-Control', 's-maxage=1800');
   }
 
-  return { props: { contractA, contractB } };
+  return { props: { contractA, contractB, addressA: params.addressA, addressB: params.addressB } };
 };
 
 
