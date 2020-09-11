@@ -8,9 +8,13 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "add": "^2.0.6",
+    "isomorphic-fetch": "^2.2.1",
     "next": "latest",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "react-gh-like-diff": "^2.0.2",
+    "yarn": "^1.22.5"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
