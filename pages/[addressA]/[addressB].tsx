@@ -1,5 +1,4 @@
 import { NextPage, GetServerSideProps } from 'next';
-import Link from 'next/link'
 import Layout from '../../components/Layout';
 import { ReactGhLikeDiff } from "react-gh-like-diff";
 import { getContract, Contract } from '../../lib/etherscan';
@@ -44,8 +43,8 @@ const DiffPage: NextPage<DiffPageProps> = ({ contractA, contractB, addressA, add
 
 export const getServerSideProps: GetServerSideProps = async ({ params, res }) => {
   const [contractA, contractB] = await Promise.all([
-    getContract(params.addressA),
-    getContract(params.addressB),
+    getContract(params!.addressA.toString()),
+    getContract(params!.addressB.toString()),
   ]);
 
 
@@ -53,7 +52,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
     res.setHeader('Cache-Control', 's-maxage=1800');
   }
 
-  return { props: { contractA, contractB, addressA: params.addressA, addressB: params.addressB } };
+  return { props: {
+    contractA,
+    contractB,
+    addressA: params!.addressA.toString(),
+    addressB: params!.addressB.toString(),
+  } };
 };
 
 
